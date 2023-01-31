@@ -1,0 +1,80 @@
+.patients{
+    padding-top: 56px;
+    padding-left: 41px;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 36px;
+    position: static;
+}
+
+.searchPatients{
+    position: absolute;
+    top: 100px;
+    /* width: 272px; */
+    /* height: 42px; */
+}
+
+.searchPatientsInput{
+    background: #FDD6BA;
+    border-radius: 10px;
+    border-width: 0px;
+}
+
+.searchPatientsInput::placeholder{
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding-inline: 20%;
+    padding-block: 2%;
+    font-size: 20px;
+    line-height: 16px;
+    color: rgba(30, 30, 30, 0.67);  
+}
+
+/* Patient Name Section */
+
+.patientList{
+    position:relative;
+    top: 80px;
+}
+
+
+.patientImage{
+    position: relative;
+    vertical-align: middle;
+    /* background-color: red; */
+    width: 63px;
+    height: 63px;
+    border-radius: 50%;
+
+    top: 10px;
+    left: 20px;
+}
+
+.patientName{
+    position: relative;
+    width: 171px;
+    height: 29px;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 22px;
+    
+    top: 15px;
+}
+
+.patientDisease{
+    position: relative;
+    width: 196px;
+    height: 21px;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    
+    top: 1px;
+}
