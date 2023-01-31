@@ -2,24 +2,35 @@ import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 
-function prescriptionGenerator() {
+function PrescriptionGenerator() {
+    const [searchMedicine, setsearchMedicine] = useState('');
+
+    const handleSubmit = (event) => {
+        console.log(searchMedicine);
+        event.preventDefault();
+    }
+
     return (
         <div>
-            <input
-                type="text"
-                placeholder='Search Medicines'
-                className='border'
-                autoComplete='on'
-                // autoFocus
-                style={{
-                    width: '50vw',
-                    height: '44px',
-                    background: 'rgba(253, 214, 186, 0.6)',
-                    borderRadius: '15px',
-                    borderWidth: '0px',
-                    // paddingInline: '350px',
-                }} />
+            <form onSubmit={(e) => handleSubmit(e)}>
+                <input
+                    type="text"
+                    placeholder='Search Medicines'
+                    className='border'
+                    autoComplete='on'
+                    onChange={e => setsearchMedicine(e.target.value)}
+                    autoFocus
+                    style={{
+                        width: '50vw',
+                        height: '44px',
+                        background: 'rgba(253, 214, 186, 0.6)',
+                        borderRadius: '15px',
+                        borderWidth: '0px',
+                        paddingInline: '250px',
+                    }} />
+            </form>
 
             <Row style={{ marginTop: '50px' }}>
                 <Col className='border p-3' style={{
@@ -242,4 +253,4 @@ function prescriptionGenerator() {
     )
 }
 
-export default prescriptionGenerator
+export default PrescriptionGenerator
