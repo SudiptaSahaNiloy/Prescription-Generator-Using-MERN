@@ -6,11 +6,11 @@ import { Row, Col } from 'react-bootstrap';
 
 function patientList() {
   return (
-    <div className='patients '>
-      Patients
+    <div className='patients'>
+      <div>Patients</div>
       <div className='searchPatients border'>
         <Row>
-          <input className='searchPatientsInput ' type="text" autocomplete="on" placeholder="Search Patients" />
+          <input className='searchPatientsInput ' type="text" autoComplete="on" placeholder="Search Patients" />
         </Row>
       </div>
       <Row className='patientList'>

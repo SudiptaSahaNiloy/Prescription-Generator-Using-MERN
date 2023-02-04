@@ -3,7 +3,7 @@ import { Row, Col, Button, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { getSearchMedicineInfo } from '../../Redux/mapActionCreator';
+import { getSearchMedicineInfo } from '../../Redux/mapActionCreator.js';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
@@ -144,7 +144,7 @@ function PrescriptionGenerator(props) {
                 }}>
                     {/* Medicine Info Section Start */}
                     <Row>
-                        <h2>Medicine Name: {selectedMedicine.brandName}</h2>
+                        <h2 data-testid="m1">Medicine Name: {selectedMedicine.brandName}</h2>
                         <p style={{ width: '400px', fontSize: '21px' }}>
                             Dosage Form: {selectedMedicine.dosageForm}
                         </p>

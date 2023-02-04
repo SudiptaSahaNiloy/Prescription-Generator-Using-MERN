@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import PatientInfo from './PatientInfo/patientInfo';
-import PatientList from './PatientList/patientList';
-import PrescriptionGenerator from './PrescriptionSection/prescriptionGenerator';
+import PatientInfo from './PatientInfo/patientInfo.js';
+import PatientList from './PatientList/patientList.js';
+import PrescriptionGenerator from './PrescriptionSection/prescriptionGenerator.js';
 import './Main.css';
 import { useState } from 'react';
 
@@ -33,7 +33,7 @@ function Main() {
                                 </Col>
                                 <Col md='10'>
                                     <Row>
-                                        <p className='patientName'>Kate Tunner</p>
+                                        <p data-testid='pg-1' className='patientName'>Kate Tunner</p>
                                     </Row>
                                     <Row>
                                         <p className='patientDisease'>Coronary Antherosclerosis</p>
