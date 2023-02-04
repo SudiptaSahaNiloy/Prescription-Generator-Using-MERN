@@ -4,8 +4,15 @@ import PatientInfo from './PatientInfo/patientInfo';
 import PatientList from './PatientList/patientList';
 import PrescriptionGenerator from './PrescriptionSection/prescriptionGenerator';
 import './Main.css';
+import { useState } from 'react';
 
 function Main() {
+    const [addNew, setaddNew] = useState(false);
+
+    const onSubmit = () => {
+        setaddNew(!addNew);
+    }
+
     return (
         <div>
             <Row>
@@ -35,12 +42,12 @@ function Main() {
                             </Row>
                         </Col>
                         <Col>
-                            <Button>Add New</Button>
+                            <Button onClick={() => onSubmit()}>Create New Prescription</Button>
                         </Col>
                     </Row>
                     {/* top info section end */}
-                    {/* <PatientInfo /> */}
-                    <PrescriptionGenerator />
+
+                    {addNew ? <PatientInfo /> : <PrescriptionGenerator />}
                 </Col>
             </Row>
         </div>
