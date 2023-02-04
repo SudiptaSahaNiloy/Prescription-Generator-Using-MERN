@@ -1,15 +1,99 @@
 import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { getSearchMedicineInfo } from '../../Redux/mapActionCreator';
+import { connect } from 'react-redux';
 
-function PrescriptionGenerator() {
+const mapStateToProps = (state) => {
+    return ({
+        searchedMedicineResponse: state.searchedMedicineResponse,
+    })
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return ({
+        getSearchMedicineInfo: (searchedMedicine) => { dispatch(getSearchMedicineInfo(searchedMedicine)) }
+    })
+}
+
+function PrescriptionGenerator(props) {
     const [searchMedicine, setsearchMedicine] = useState('');
+    const [selectedMedicine, setselectedMedicine] = useState('');
+    const [searchResultTable, setsearchResultTable] = useState(false);
+    const [onRepeat, setonRepeat] = useState('');
+    const [timeOfTheDay, settimeOfTheDay] = useState('');
+    const [toBeTaken, settoBeTaken] = useState('');
+    const [dosageCount, setdosageCount] = useState(1);
+    const [dosageDuration, setdosageDuration] = useState(1);
+    const [prescribedMedicine, setprescribedMedicine] = useState([]);
 
     const handleSubmit = (event) => {
-        console.log(searchMedicine);
+        setsearchResultTable(true);
+        props.getSearchMedicineInfo(searchMedicine);
         event.preventDefault();
+    }
+
+    const handleOnRepeat = (e) => {
+        setonRepeat(e.target.value);
+    }
+
+    const handleTimeOfTheDay = (e) => {
+        settimeOfTheDay(e.target.value);
+    }
+
+    const handleToBeTaken = (e) => {
+        settoBeTaken(e.target.value);
+    }
+
+    const handleAddMedicine = (e) => {
+        const prescriptionInfo = {
+            selectedMedicineBrandName: selectedMedicine.brandName,
+            selectedMedicineStrength: selectedMedicine.strength,
+            onRepeat: onRepeat,
+            timeOfTheDay: timeOfTheDay,
+            toBeTaken: toBeTaken,
+            dosageCount: dosageCount,
+            dosageDuration: dosageDuration,
+        }
+
+        setprescribedMedicine(item => [...item, prescriptionInfo]);
+    }
+
+    // console.log(prescribedMedicine);
+
+    const handleDosageCountInc = (e) => {
+        if (dosageCount < 3) setdosageCount(dosageCount + 1);
+    }
+
+    const handleDosageCountDec = (e) => {
+        if (dosageCount > 1) setdosageCount(dosageCount - 1);
+    }
+
+    const handleDosageDurationInc = () => {
+        if (dosageDuration < 3) setdosageDuration(dosageDuration + 1);
+    }
+
+    const handleDosageDurationDec = () => {
+        if (dosageDuration > 1) setdosageDuration(dosageDuration - 1);
+    }
+
+    const handlePrescriptionInfo = () => {
+        const prescriptionInfo = {
+            onRepeat: onRepeat,
+            timeOfTheDay: timeOfTheDay,
+            toBeTaken: toBeTaken,
+            dosageCount: dosageCount,
+            dosageDuration: dosageDuration,
+        }
+
+        console.log(prescriptionInfo);
+    }
+
+    const handleSelectSearchedMedicine = (med) => {
+        setsearchResultTable(false);
+        setselectedMedicine(med);
     }
 
     return (
@@ -32,7 +116,25 @@ function PrescriptionGenerator() {
                     }} />
             </form>
 
-            <Row style={{ marginTop: '50px' }}>
+            {
+                searchResultTable ?
+                    <Table bordered hover style={{
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: '1'
+                    }}>
+                        <tbody>
+                            {props.searchedMedicineResponse.map((item) => {
+                                // console.log(item);
+                                return (
+                                    <tr onClick={() => handleSelectSearchedMedicine(item)}>{item.brandName}</tr>
+                                )
+                            })}
+                        </tbody>
+                    </Table> : null
+            }
+
+            <Row style={{ marginTop: '50px', zIndex: '-50' }}>
                 <Col className='border p-3' style={{
                     fontFamily: "'Inter', sans-serif",
                     fontStyle: 'normal',
@@ -42,13 +144,18 @@ function PrescriptionGenerator() {
                 }}>
                     {/* Medicine Info Section Start */}
                     <Row>
-                        <h2>Medicine Name: Paracetamol</h2>
-                        <p style={{ width: '400px', fontSize: '21px' }}>Description: Paracetamol is a centrally acting analgesic and antipyretic with minimal anti-inflammatory properties</p>
+                        <h2>Medicine Name: {selectedMedicine.brandName}</h2>
+                        <p style={{ width: '400px', fontSize: '21px' }}>
+                            Dosage Form: {selectedMedicine.dosageForm}
+                        </p>
+                        <p style={{ width: 'auto', fontSize: '21px' }}>
+                            Manufacturer: {selectedMedicine.manufacturer}
+                        </p>
                     </Row>
                     {/* Medicine Info Section End */}
 
                     {/* Repeat Section Start */}
-                    <Row className='mt-2'>
+                    <Row className='mt-4'>
                         <div style={{
                             fontWeight: 400,
                             fontSize: '24px',
@@ -58,23 +165,29 @@ function PrescriptionGenerator() {
                         <div className='mt-1'>
                             <Row>
                                 <Col>
-                                    <button style={{
-                                        width: '200px',
-                                        background: 'rgba(38, 2, 255, 0.51)',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        color: '#00109B',
-                                        borderRadius: '10px'
-                                    }}>Everyday</button>
+                                    <button
+                                        onClick={(e) => handleOnRepeat(e)}
+                                        value="everyday"
+                                        style={{
+                                            width: '200px',
+                                            background: 'rgba(38, 2, 255, 0.51)',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            color: '#00109B',
+                                            borderRadius: '10px'
+                                        }}>Everyday</button>
                                 </Col>
                                 <Col>
-                                    <button style={{
-                                        width: '200px',
-                                        background: '#D9D9D9',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        borderRadius: '10px',
-                                    }}>Alternate days</button>
+                                    <button
+                                        onClick={(e) => handleOnRepeat(e)}
+                                        value="alternate days"
+                                        style={{
+                                            width: '200px',
+                                            background: '#D9D9D9',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            borderRadius: '10px',
+                                        }}>Alternate days</button>
                                 </Col>
                             </Row>
                         </div>
@@ -92,40 +205,52 @@ function PrescriptionGenerator() {
                         <div className='mt-1'>
                             <Row>
                                 <Col>
-                                    <button style={{
-                                        width: '200px',
-                                        background: 'rgba(38, 2, 255, 0.51)',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        color: '#00109B',
-                                        borderRadius: '10px',
-                                        marginBottom: '10px'
-                                    }}>Morning</button>
-                                    <button style={{
-                                        width: '200px',
-                                        background: 'rgba(38, 2, 255, 0.51)',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        color: '#00109B',
-                                        borderRadius: '10px'
-                                    }}>Evening</button>
+                                    <button
+                                        onClick={(e) => handleTimeOfTheDay(e)}
+                                        value="morning"
+                                        style={{
+                                            width: '200px',
+                                            background: 'rgba(38, 2, 255, 0.51)',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            color: '#00109B',
+                                            borderRadius: '10px',
+                                            marginBottom: '10px'
+                                        }}>Morning</button>
+                                    <button
+                                        onClick={(e) => handleTimeOfTheDay(e)}
+                                        value="evening"
+                                        style={{
+                                            width: '200px',
+                                            background: 'rgba(38, 2, 255, 0.51)',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            color: '#00109B',
+                                            borderRadius: '10px'
+                                        }}>Evening</button>
                                 </Col>
                                 <Col>
-                                    <button style={{
-                                        width: '200px',
-                                        background: '#D9D9D9',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        borderRadius: '10px',
-                                        marginBottom: '10px'
-                                    }}>Noon</button>
-                                    <button style={{
-                                        width: '200px',
-                                        background: '#D9D9D9',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        borderRadius: '10px',
-                                    }}>Night</button>
+                                    <button
+                                        onClick={(e) => handleTimeOfTheDay(e)}
+                                        value="noon"
+                                        style={{
+                                            width: '200px',
+                                            background: '#D9D9D9',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            borderRadius: '10px',
+                                            marginBottom: '10px'
+                                        }}>Noon</button>
+                                    <button
+                                        onClick={(e) => handleTimeOfTheDay(e)}
+                                        value="night"
+                                        style={{
+                                            width: '200px',
+                                            background: '#D9D9D9',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            borderRadius: '10px',
+                                        }}>Night</button>
                                 </Col>
                             </Row>
                         </div>
@@ -143,60 +268,80 @@ function PrescriptionGenerator() {
                         <div className='mt-1'>
                             <Row>
                                 <Col>
-                                    <button style={{
-                                        width: '200px',
-                                        background: 'rgba(38, 2, 255, 0.51)',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        color: '#00109B',
-                                        borderRadius: '10px'
-                                    }}>After Food</button>
+                                    <button
+                                        value="after food"
+                                        onClick={(e) => handleToBeTaken(e)}
+                                        style={{
+                                            width: '200px',
+                                            background: 'rgba(38, 2, 255, 0.51)',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            color: '#00109B',
+                                            borderRadius: '10px'
+                                        }}>After Food</button>
                                 </Col>
                                 <Col>
-                                    <button style={{
-                                        width: '200px',
-                                        background: '#D9D9D9',
-                                        borderWidth: '0px',
-                                        height: '42px',
-                                        borderRadius: '10px',
-                                    }}>Before Food</button>
+                                    <button
+                                        value="before food"
+                                        onClick={(e) => handleToBeTaken(e)}
+                                        style={{
+                                            width: '200px',
+                                            background: '#D9D9D9',
+                                            borderWidth: '0px',
+                                            height: '42px',
+                                            borderRadius: '10px',
+                                        }}>Before Food</button>
                                 </Col>
                             </Row>
                         </div>
                     </Row>
                     {/* To be taken section end */}
 
-                    <Row>
-                        <button style={{
-                            width: '600px',
-                            height: '41px',
-                            background: '#FDD572',
-                            borderRadius: '30px',
-                            borderWidth: '0px',
-                            marginTop: '20px'
-                        }}>Add Medicine</button>
-                    </Row>
-                </Col>
-                <Col className='p-3 border'>
                     {/* Dosage Section Start */}
-                    <Row>
-                        <Col className='border' style={{ marginLeft: '30px' }}>
+                    <Row className='mt-4'>
+                        <Col className='border' style={{ marginLeft: '1px' }}>
                             <h4>Dosage</h4>
-                            <FontAwesomeIcon icon={faCircleMinus} style={{ marginRight: '10px' }} />
-                            1 Tablet
-                            <FontAwesomeIcon icon={faCirclePlus} style={{ marginLeft: '10px' }} />
+                            <FontAwesomeIcon
+                                onClick={(e) => handleDosageCountDec(e)}
+                                icon={faCircleMinus}
+                                style={{ marginRight: '10px' }} />
+                            {dosageCount} Tablet
+                            <FontAwesomeIcon
+                                onClick={(e) => handleDosageCountInc(e)}
+                                icon={faCirclePlus}
+                                style={{ marginLeft: '10px' }} />
                         </Col>
                         <Col className='border' style={{ marginLeft: '50px', height: 'auto', width: '100px' }}>
                             <h4>Duration Week</h4>
-                            <FontAwesomeIcon icon={faCircleMinus} style={{ marginRight: '10px' }} />
-                            1 Week
-                            <FontAwesomeIcon icon={faCirclePlus} style={{ marginLeft: '10px' }} />
+                            <FontAwesomeIcon
+                                onClick={() => handleDosageDurationDec()}
+                                icon={faCircleMinus}
+                                style={{ marginRight: '10px' }} />
+                            {dosageDuration} Week
+                            <FontAwesomeIcon
+                                onClick={() => handleDosageDurationInc()}
+                                icon={faCirclePlus}
+                                style={{ marginLeft: '10px' }} />
                         </Col>
                     </Row>
                     {/* Dosage Section End */}
 
+                    <Row>
+                        <button
+                            onClick={(e) => handleAddMedicine(e)}
+                            style={{
+                                width: '600px',
+                                height: '41px',
+                                background: '#FDD572',
+                                borderRadius: '30px',
+                                borderWidth: '0px',
+                                marginTop: '20px'
+                            }}>Add Medicine</button>
+                    </Row>
+                </Col>
+                <Col className='p-3 border'>
                     {/* Prescribed Medicine Section Start */}
-                    <Row style={{ marginTop: '80px', marginLeft: '50px' }}>
+                    <Row style={{ marginTop: '30px', marginLeft: '50px' }}>
                         <div style={{
                             fontWeight: 400,
                             fontSize: '24px',
@@ -204,53 +349,37 @@ function PrescriptionGenerator() {
                             marginBottom: '10px'
                         }}>Patient's Prescription</div>
                         <div className='mt-1'>
-                            <Row>
-                                <div style={{
-                                    width: '309px',
-                                    height: '103px',
-                                    background: '#FFFFFF',
-                                    border: '0.1px solid #000000',
-                                    borderRadius: '11px',
-                                    padding: '15px'
-                                }}>
-                                    Paracetamol 500mg
-                                    <p style={{
-                                        marginTop: '5px',
-                                        fontWeight: 400,
-                                        fontSize: '14px',
-                                        lineHeight: '17px',
-                                        color: 'rgba(0, 0, 0, 0.5)'
-                                    }}>1 tablet everyday for 1 week in morning, noon after food</p>
-                                </div>
-                            </Row>
-                        </div>
-                        <div className='mt-2'>
-                            <Row>
-                                <div style={{
-                                    width: '309px',
-                                    height: '103px',
-                                    background: '#FFFFFF',
-                                    border: '0.1px solid #000000',
-                                    borderRadius: '11px',
-                                    padding: '15px'
-                                }}>
-                                    Liquiprin
-                                    <p style={{
-                                        marginTop: '5px',
-                                        fontWeight: 400,
-                                        fontSize: '14px',
-                                        lineHeight: '17px',
-                                        color: 'rgba(0, 0, 0, 0.5)'
-                                    }}>1 teaspoon everyday for 1 week in morning, noon after food</p>
-                                </div>
-                            </Row>
+                            {prescribedMedicine.map((item) => {
+                                return (
+                                    <Row className='mb-1'>
+                                        <div style={{
+                                            width: '309px',
+                                            height: '103px',
+                                            background: '#FFFFFF',
+                                            border: '0.1px solid #000000',
+                                            borderRadius: '11px',
+                                            padding: '15px'
+                                        }}>
+                                            {item.selectedMedicineBrandName} {item.selectedMedicineStrength}
+                                            <p style={{
+                                                marginTop: '5px',
+                                                fontWeight: 400,
+                                                fontSize: '14px',
+                                                lineHeight: '17px',
+                                                color: 'rgba(0, 0, 0, 0.5)'
+                                            }}>{item.dosageCount} tablet everyday for {item.dosageDuration} week in {item.timeOfTheDay} {item.toBeTaken}</p>
+                                        </div>
+                                    </Row>
+                                )
+                            })}
                         </div>
                     </Row>
                     {/* Prescribed Medicine Section End */}
                 </Col>
             </Row >
+            <Button onClick={() => handlePrescriptionInfo()}>Generate Prescription</Button>
         </div >
     )
 }
 
-export default PrescriptionGenerator
+export default connect(mapStateToProps, mapDispatchToProps)(PrescriptionGenerator);
