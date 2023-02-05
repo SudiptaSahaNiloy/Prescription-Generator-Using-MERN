@@ -5,6 +5,7 @@ import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { getSearchMedicineInfo } from '../../Redux/mapActionCreator.js';
 import { connect } from 'react-redux';
+import CreatePDF from './CreatePDF/createpdf.js';
 
 const mapStateToProps = (state) => {
     return ({
@@ -378,6 +379,7 @@ function PrescriptionGenerator(props) {
                 </Col>
             </Row >
             <Button onClick={() => handlePrescriptionInfo()}>Generate Prescription</Button>
+            <CreatePDF prescribedMedicine={prescribedMedicine} />
         </div >
     )
 }

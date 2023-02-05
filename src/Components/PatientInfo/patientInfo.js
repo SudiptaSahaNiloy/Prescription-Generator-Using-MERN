@@ -1,6 +1,7 @@
 import React from 'react'
 import { Row, Col, Button } from 'react-bootstrap';
-import './Stylesheet/patientInfo.css'
+import './Stylesheet/patientInfo.css';
+import { axios } from 'axios';
 
 function patientInfo() {
   return (

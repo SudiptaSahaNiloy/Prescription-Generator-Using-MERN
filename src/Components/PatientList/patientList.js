@@ -8,9 +8,9 @@ function patientList() {
   return (
     <div className='patients'>
       <div>Patients</div>
-      <div className='searchPatients border'>
+      <div className='searchPatients'>
         <Row>
-          <input className='searchPatientsInput ' type="text" autoComplete="on" placeholder="Search Patients" />
+          <input className='searchPatientsInput' type="text" autoComplete="on" placeholder="Search Patients" />
         </Row>
       </div>
       <Row className='patientList'>
