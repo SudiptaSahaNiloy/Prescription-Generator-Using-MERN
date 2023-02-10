@@ -1,58 +1,72 @@
-import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
-import PatientInfo from './PatientInfo/patientInfo.js';
-import PatientList from './PatientList/patientList.js';
+import React, { useEffect } from 'react';
+import Body from './Body/Body.js';
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import Auth from './Auth/Auth.js';
 import PrescriptionGenerator from './PrescriptionSection/prescriptionGenerator.js';
-import './Main.css';
-import { useState } from 'react';
+import PatientInfo from './PatientInfo/patientInfo';
+import AddPatientInfo from './AddPatientInfo/AddPatientInfo';
+import { connect } from 'react-redux';
+import { authCheck } from '../Redux/authActionCreator.js';
+import AddDisease from './AddDisease/AddDisease.js';
 
-function Main() {
-    const [addNew, setaddNew] = useState(false);
+const mapStateToProps = (state) => {
+    return ({
+        userId: state.userId,
+        userName: state.userName,
+    })
+}
 
-    const onSubmit = () => {
-        setaddNew(!addNew);
+const mapDispatchToProps = (dispatch) => {
+    return ({
+        authCheck: () => dispatch(authCheck()),
+    })
+}
+
+function Main(props) {
+    useEffect(() => {
+        props.authCheck();
+    }, [])
+
+    let routes = null;
+
+    // console.log(props.userName !== null)
+
+    if (props.userName) {
+        // console.log("Logged In");
+        routes = (
+            <Routes>
+                <Route path="/auth" exact element={<Auth />} />
+                <Route path="/home" exact element={<Body />}>
+                    <Route path="addPrescriptionInfo" exact element={<PrescriptionGenerator />} />
+                    <Route path="patientInfo" exact element={<PatientInfo />} />
+                    <Route path="addPatientInfo" exact element={<AddPatientInfo />} />
+                    <Route path="addDisease" exact element={<AddDisease />} />
+                    {/* <Route path="/generatePrescription" exact element={<CreatePDF />} /> */}
+                    <Route
+                        path="*"
+                        element={<Navigate to="/home" replace={true} />}
+                    />
+                </Route>
+            </Routes>
+        )
+    } else {
+        // console.log("Logged Out");
+        routes = (
+            <Routes>
+                <Route path="/auth" exact element={<Auth />} />
+                {/* <Route
+                    path="*"
+                    element={<Navigate to="/auth" replace={true} />}
+                /> */}
+            </Routes>
+        )
     }
 
     return (
         <div>
-            <Row>
-                <Col md={4} className='PatientListStyle'>
-                    <PatientList />
-                </Col>
-                <Col md={8} className='PatientInfoStyle' style={{
-                    padding: '100px',
-                    fontFamily: "'Inter', sans-serif",
-                    fontStyle: 'normal',
-                }}>
-                    {/* top info section start */}
-                    <Row>
-                        <Col>
-                            <Row>
-                                <Col md='2'>
-                                    <img src="avatar.jpg" alt="Avatar" className='patientImage'></img>
-                                </Col>
-                                <Col md='10'>
-                                    <Row>
-                                        <p data-testid='pg-1' className='patientName'>Kate Tunner</p>
-                                    </Row>
-                                    <Row>
-                                        <p className='patientDisease'>Coronary Antherosclerosis</p>
-                                    </Row>
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Button onClick={() => onSubmit()}>Create New Prescription</Button>
-                        </Col>
-                    </Row>
-                    {/* top info section end */}
-
-                    {addNew ? <PatientInfo /> : <PrescriptionGenerator />}
-                </Col>
-            </Row>
+            {routes}
         </div>
-
     )
 }
 
-export default Main
+export default connect(mapStateToProps, mapDispatchToProps)(Main)

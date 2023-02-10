@@ -1,0 +1,29 @@
+/* .login-image-section>img {
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.auth-form {
+    border-radius: 25px;
+    margin-top: 20%;
+    margin-left: -550px;
+    border-radius: 10px;
+    background-color: whitesmoke;
+    width: 70%;
+    box-shadow: 10px 10px 5px grey;
+}
+
+@media only screen and (max-width: 600px) {
+    .auth-form {
+        margin-top: 30%;
+        border-radius: 10px;
+        background-color: whitesmoke;
+        margin-left: 0px;
+        width: 100%;
+        box-shadow: 10px 10px 5px grey;
+    }
+} */

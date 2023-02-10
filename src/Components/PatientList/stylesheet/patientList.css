@@ -10,25 +10,28 @@
 }
 
 .searchPatients{
-    position: absolute;
-    top: 100px;
-    /* width: 272px; */
-    /* height: 42px; */
+    /* position: absolute; */
+    /* top: 200px; */
+    margin-top: 20px;
+    margin-left: 10px;
+    width: 372px;
+    height: 42px;
 }
 
 .searchPatientsInput{
     background: #FDD6BA;
     border-radius: 10px;
     border-width: 0px;
+    padding-block: 7px;
 }
 
 .searchPatientsInput::placeholder{
     position: absolute;
     width: auto;
     height: auto;
-    padding-inline: 20%;
+    padding-inline: 28%;
     padding-block: 2%;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 16px;
     color: rgba(30, 30, 30, 0.67);  
 }
@@ -37,7 +40,7 @@
 
 .patientList{
     position:relative;
-    top: 80px;
+    top: 40px;
 }
 
 
@@ -55,7 +58,7 @@
 
 .patientName{
     position: relative;
-    width: 171px;
+    width: auto;
     height: 29px;
 
     font-style: normal;
@@ -68,7 +71,7 @@
 
 .patientDisease{
     position: relative;
-    width: 196px;
+    width: auto;
     height: 21px;
 
     font-style: normal;
