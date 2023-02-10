@@ -1,0 +1,7 @@
+Digital signaturing the prescription to resist forgery and tampering. Here I have:
+
+1. Created a script to digitally sign a prescription
+2. Added a unsigned prescription
+3. Added a signed prescription which was signed using the script
+4. Addition required files (Digital ID and Signature PNG file)
+5. Added a demo video here: https://drive.google.com/file/d/1bNCnyggYHfP-Pag4rveusMZvU0g9cNF9/view?usp=sharing
