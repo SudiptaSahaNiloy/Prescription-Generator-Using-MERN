@@ -1,12 +1,27 @@
 import React from 'react'
 import { Row, Col, Button } from 'react-bootstrap';
-import './Stylesheet/patientInfo.css'
+import { connect } from 'react-redux';
+import './Stylesheet/patientInfo.css';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-function patientInfo() {
+const mapStateToProps = (state) => {
+  return ({
+    patientInfo: state.patientInfo,
+  })
+}
+
+function PatientInfo(props) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleOnClick = () => {
+    navigate("/home/addDisease", { state: { patientInfo: location.state.patientInfo } });
+  }
+
   return (
     <div>
       {/* Disease Info start */}
-      <Row style={{ marginTop: '50px' }}>
+      {/* <Row style={{ marginTop: '50px' }}>
         <h1>Latest Diagnosis</h1>
         <div style={{ border: '1px solid #000000', textAlign: 'left', marginLeft: '0', marginBottom: '20px' }} />
         <Col>
@@ -33,8 +48,14 @@ function patientInfo() {
             </div>
           </Row>
         </Col>
-      </Row>
+      </Row> */}
       {/* Disease Info end */}
+
+      <Row>
+        {/* <Link to="/addPrescriptionInfo"> */}
+        <Button variant="outline-primary" style={{ width: '200px', marginLeft: '40vw' }} onClick={() => handleOnClick()}>Add Disease</Button>
+        {/* </Link> */}
+      </Row>
 
       {/* General Info Section start*/}
       <Row style={{ marginTop: '50px' }}>
@@ -47,10 +68,12 @@ function patientInfo() {
           fontSize: '20px',
           lineHeight: '20px'
         }}>
-          <p>Date of Birth</p>
+          <p>Full Name</p>
           <p>Age</p>
-          <p>Sex</p>
+          <p>Gender</p>
+          <p>Weight</p>
           <p>Blood Group</p>
+          <p>Known Allergies</p>
         </Col>
         <Col style={{
           fontFamily: "'Inter', sans-serif",
@@ -59,10 +82,12 @@ function patientInfo() {
           fontSize: '20px',
           lineHeight: '20px'
         }}>
-          <p>April 14, 1998</p>
-          <p>30 years old</p>
-          <p>Male</p>
-          <p>B+</p>
+          <p>{location.state.patientInfo.fullName}</p>
+          <p>{location.state.patientInfo.age} years old</p>
+          <p>{location.state.patientInfo.weight}</p>
+          <p>{location.state.patientInfo.gender}</p>
+          <p>{location.state.patientInfo.bloodGroup}</p>
+          <p>{location.state.patientInfo.knownAllergies}</p>
         </Col>
       </Row>
       {/* General Info Section end*/}
@@ -88,13 +113,13 @@ function patientInfo() {
           fontSize: '20px',
           lineHeight: '20px'
         }}>
-          <p>3/7, Mdpur, Dhaka</p>
-          <p>+8801733333331</p>
+          <p>{location.state.patientInfo.address}</p>
+          <p>{location.state.patientInfo.phoneNo}</p>
         </Col>
       </Row>
       {/* Contact Information End */}
-    </div>
+    </div >
   )
 }
 
-export default patientInfo
+export default connect(mapStateToProps)(PatientInfo)
