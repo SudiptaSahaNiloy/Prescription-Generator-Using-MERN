@@ -30,8 +30,6 @@ function AddDisease() {
         event.preventDefault();
     }
 
-    
-
     return (
         <div>
             <h1>Enter Patient Disease</h1>
