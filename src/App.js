@@ -7,8 +7,8 @@ import Createpdf from './Components/PrescriptionSection/CreatePDF/createpdf';
 function App() {
   return (
     <Provider store={store}>
-      {/* <Main /> */}
-      <Createpdf />
+      <Main />
+      {/* <Createpdf /> */}
     </Provider >
   );
 }
