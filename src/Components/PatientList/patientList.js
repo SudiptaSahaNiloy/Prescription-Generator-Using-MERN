@@ -27,7 +27,7 @@ function PatientList(props) {
 
   useEffect(() => {
     props.getAllPatientInfo();
-  }, [])
+  }, [props.allPatientInfo])
 
   return (
     <div className='patients'>

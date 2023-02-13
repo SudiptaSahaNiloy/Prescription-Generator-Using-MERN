@@ -29,7 +29,7 @@ function Main(props) {
 
     let routes = null;
 
-    // console.log(props.userName !== null)
+    // console.log(props.userName)
 
     if (props.userName) {
         // console.log("Logged In");
@@ -42,10 +42,10 @@ function Main(props) {
                     <Route path="addPatientInfo" exact element={<AddPatientInfo />} />
                     <Route path="addDisease" exact element={<AddDisease />} />
                     {/* <Route path="/generatePrescription" exact element={<CreatePDF />} /> */}
-                    <Route
+                    {/* <Route
                         path="*"
-                        element={<Navigate to="/home" replace={true} />}
-                    />
+                        element={<Navigate to="/" replace={true} />}
+                    /> */}
                 </Route>
             </Routes>
         )
