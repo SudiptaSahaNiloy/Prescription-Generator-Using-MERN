@@ -21,7 +21,7 @@ function Body() {
             <Route path="/addPrescriptionInfo" exact element={<PrescriptionGenerator />} />
             <Route path="/patientInfo" exact element={<PatientInfo />} />
             <Route path="/addPatientInfo" exact element={<AddPatientInfo />} />
-            <Route path="/generatePrescription" exact element={<CreatePDF />} />
+            {/* <Route path="/generatePrescription" exact element={<CreatePDF />} /> */}
             <Route path="addDisease" exact element={<AddDisease />} />
         </Routes>
     )

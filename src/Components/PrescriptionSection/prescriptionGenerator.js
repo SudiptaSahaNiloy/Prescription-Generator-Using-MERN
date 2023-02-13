@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col, Button, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
@@ -9,16 +9,21 @@ import CreatePDF from './CreatePDF/createpdf.js';
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from 'react-router-dom';
 import ReactPDF from '@react-pdf/renderer';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { getAllMedicineInfo } from './../../Redux/mapActionCreator';
 
 const mapStateToProps = (state) => {
     return ({
+        allMedicineResponse: state.allMedicineResponse,
         searchedMedicineResponse: state.searchedMedicineResponse,
     })
 }
 
 const mapDispatchToProps = (dispatch) => {
     return ({
-        getSearchMedicineInfo: (searchedMedicine) => { dispatch(getSearchMedicineInfo(searchedMedicine)) }
+        getSearchMedicineInfo: (searchedMedicine) => dispatch(getSearchMedicineInfo(searchedMedicine)),
+        getAllMedicineInfo: () => dispatch(getAllMedicineInfo())
     })
 }
 
@@ -86,26 +91,45 @@ function PrescriptionGenerator(props) {
         if (dosageDuration > 1) setdosageDuration(dosageDuration - 1);
     }
 
-    const handlePrescriptionInfo = () => {
-        const prescriptionInfo = {
-            onRepeat: onRepeat,
-            timeOfTheDay: timeOfTheDay,
-            toBeTaken: toBeTaken,
-            dosageCount: dosageCount,
-            dosageDuration: dosageDuration,
-        }
+    // const handlePrescriptionInfo = () => {
+    //     const prescriptionInfo = {
+    //         onRepeat: onRepeat,
+    //         timeOfTheDay: timeOfTheDay,
+    //         toBeTaken: toBeTaken,
+    //         dosageCount: dosageCount,
+    //         dosageDuration: dosageDuration,
+    //     }
 
-        console.log(prescriptionInfo);
-    }
+    //     console.log(prescriptionInfo);
+    // }
 
     const handleSelectSearchedMedicine = (med) => {
         setsearchResultTable(false);
         setselectedMedicine(med);
     }
 
+    useEffect(() => {
+        // props.getAllMedicineInfo();
+    }, []);
+
+    // console.log(props.allMedicineResponse);
+
     return (
         <div>
             <form onSubmit={(e) => handleSubmit(e)}>
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={['Paracetamol', ]}
+                    onInputChange={(event, searchMedicine) => {
+                        setsearchMedicine(searchMedicine);
+                    }}
+                    sx={{ width: "900px" }}
+                    renderInput={(params) => <TextField {...params} label="Search Medicine" />}
+                />
+            </form>
+
+            {/* <form onSubmit={(e) => handleSubmit(e)}>
                 <input
                     type="text"
                     placeholder='Search Medicines'
@@ -121,13 +145,15 @@ function PrescriptionGenerator(props) {
                         borderWidth: '0px',
                         paddingInline: '250px',
                     }} />
-            </form>
+            </form> */}
 
             {
                 searchResultTable ?
                     <Table bordered hover style={{
                         position: 'absolute',
                         backgroundColor: 'white',
+                        width: '800px',
+                        height: '500px',
                         zIndex: '1'
                     }}>
                         <tbody>
@@ -138,7 +164,7 @@ function PrescriptionGenerator(props) {
                                 <th>Package Container</th>
                             </tr>
                             {props.searchedMedicineResponse.map((item) => {
-                                console.log(item);
+                                // console.log(item);
                                 return (
                                     <tr onClick={() => handleSelectSearchedMedicine(item)}>
                                         <td>{item.brandName}</td>

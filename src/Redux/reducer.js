@@ -1,6 +1,7 @@
 import * as actionTypes from "./actionTypes.js";
 
 const INITIAL_STATE = {
+    allMedicineResponse: [],
     searchedMedicineResponse: [],
     patientInfo: [],
     allPatientInfo: [],
@@ -12,6 +13,11 @@ export const reducer = (state = INITIAL_STATE, action) => {
     // console.log(action.payload);
     switch (action.type) {
         // Write you case here
+        case actionTypes.ALL_MEDICINE_RESPONSE:
+            return {
+                ...state,
+                allMedicineResponse: action.payload,
+            }
         case actionTypes.SEARCHED_MEDICINE_RESPONSE:
             return {
                 ...state,

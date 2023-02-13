@@ -16,3 +16,16 @@ export const getSearchMedicineInfo = (genericName) => dispatch => {
     axios.post(URL, { generic: genericName })
         .then(response => dispatch(searchedMedicineResponse(response.data)));
 }
+
+export const allMedicineResponse = (allMedicines) => {
+    return {
+        type: actionTypes.ALL_MEDICINE_RESPONSE,
+        payload: allMedicines
+    }
+}
+
+export const getAllMedicineInfo = () => dispatch => {
+    const URL = mainURL;
+    axios.get(URL)
+        .then(response => dispatch(allMedicineResponse(response.data)));
+}

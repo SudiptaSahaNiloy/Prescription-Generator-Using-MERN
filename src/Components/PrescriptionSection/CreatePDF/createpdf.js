@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 
 // Create Document Component
 function CreatePDF(props) {
-    console.log(props);
+    // console.log(props);
     const current = new Date();
     const date = `${current.getDate()}.${current.getMonth() + 1}.${current.getFullYear()}`;
 
