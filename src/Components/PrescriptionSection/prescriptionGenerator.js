@@ -1,20 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col, Button, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { getSearchMedicineInfo } from '../../Redux/mapActionCreator';
+import { getSearchMedicineInfo } from '../../Redux/mapActionCreator.js';
 import { connect } from 'react-redux';
+import CreatePDF from './CreatePDF/createpdf.js';
+import { motion } from "framer-motion";
+import { useLocation, useNavigate } from 'react-router-dom';
+import ReactPDF from '@react-pdf/renderer';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { getAllMedicineInfo } from './../../Redux/mapActionCreator';
 
 const mapStateToProps = (state) => {
     return ({
+        allMedicineResponse: state.allMedicineResponse,
         searchedMedicineResponse: state.searchedMedicineResponse,
     })
 }
 
 const mapDispatchToProps = (dispatch) => {
     return ({
-        getSearchMedicineInfo: (searchedMedicine) => { dispatch(getSearchMedicineInfo(searchedMedicine)) }
+        getSearchMedicineInfo: (searchedMedicine) => dispatch(getSearchMedicineInfo(searchedMedicine)),
+        getAllMedicineInfo: () => dispatch(getAllMedicineInfo())
     })
 }
 
@@ -28,6 +37,9 @@ function PrescriptionGenerator(props) {
     const [dosageCount, setdosageCount] = useState(1);
     const [dosageDuration, setdosageDuration] = useState(1);
     const [prescribedMedicine, setprescribedMedicine] = useState([]);
+
+    const location = useLocation();
+    // console.log(location.state);
 
     const handleSubmit = (event) => {
         setsearchResultTable(true);
@@ -79,30 +91,49 @@ function PrescriptionGenerator(props) {
         if (dosageDuration > 1) setdosageDuration(dosageDuration - 1);
     }
 
-    const handlePrescriptionInfo = () => {
-        const prescriptionInfo = {
-            onRepeat: onRepeat,
-            timeOfTheDay: timeOfTheDay,
-            toBeTaken: toBeTaken,
-            dosageCount: dosageCount,
-            dosageDuration: dosageDuration,
-        }
+    // const handlePrescriptionInfo = () => {
+    //     const prescriptionInfo = {
+    //         onRepeat: onRepeat,
+    //         timeOfTheDay: timeOfTheDay,
+    //         toBeTaken: toBeTaken,
+    //         dosageCount: dosageCount,
+    //         dosageDuration: dosageDuration,
+    //     }
 
-        console.log(prescriptionInfo);
-    }
+    //     console.log(prescriptionInfo);
+    // }
 
     const handleSelectSearchedMedicine = (med) => {
         setsearchResultTable(false);
         setselectedMedicine(med);
     }
 
+    useEffect(() => {
+        // props.getAllMedicineInfo();
+    }, []);
+
+    // console.log(props.allMedicineResponse);
+
     return (
         <div>
             <form onSubmit={(e) => handleSubmit(e)}>
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={['Paracetamol', ]}
+                    onInputChange={(event, searchMedicine) => {
+                        setsearchMedicine(searchMedicine);
+                    }}
+                    sx={{ width: "900px" }}
+                    renderInput={(params) => <TextField {...params} label="Search Medicine" />}
+                />
+            </form>
+
+            {/* <form onSubmit={(e) => handleSubmit(e)}>
                 <input
                     type="text"
                     placeholder='Search Medicines'
-                    className='border'
+                    className=''
                     autoComplete='on'
                     onChange={e => setsearchMedicine(e.target.value)}
                     autoFocus
@@ -114,20 +145,33 @@ function PrescriptionGenerator(props) {
                         borderWidth: '0px',
                         paddingInline: '250px',
                     }} />
-            </form>
+            </form> */}
 
             {
                 searchResultTable ?
                     <Table bordered hover style={{
                         position: 'absolute',
                         backgroundColor: 'white',
+                        width: '800px',
+                        height: '500px',
                         zIndex: '1'
                     }}>
                         <tbody>
+                            <tr>
+                                <th>Brand Name</th>
+                                <th>Dosage Form</th>
+                                <th>Manufacturer</th>
+                                <th>Package Container</th>
+                            </tr>
                             {props.searchedMedicineResponse.map((item) => {
                                 // console.log(item);
                                 return (
-                                    <tr onClick={() => handleSelectSearchedMedicine(item)}>{item.brandName}</tr>
+                                    <tr onClick={() => handleSelectSearchedMedicine(item)}>
+                                        <td>{item.brandName}</td>
+                                        <td>{item.dosageForm}</td>
+                                        <td>{item.manufacturer}</td>
+                                        <td>{item.packageContainer}</td>
+                                    </tr>
                                 )
                             })}
                         </tbody>
@@ -135,7 +179,7 @@ function PrescriptionGenerator(props) {
             }
 
             <Row style={{ marginTop: '50px', zIndex: '-50' }}>
-                <Col className='border p-3' style={{
+                <Col className=' p-3' style={{
                     fontFamily: "'Inter', sans-serif",
                     fontStyle: 'normal',
                     fontWeight: '500',
@@ -144,7 +188,7 @@ function PrescriptionGenerator(props) {
                 }}>
                     {/* Medicine Info Section Start */}
                     <Row>
-                        <h2>Medicine Name: {selectedMedicine.brandName}</h2>
+                        <h2 data-testid="m1">Medicine Name: {selectedMedicine.brandName}</h2>
                         <p style={{ width: '400px', fontSize: '21px' }}>
                             Dosage Form: {selectedMedicine.dosageForm}
                         </p>
@@ -165,7 +209,9 @@ function PrescriptionGenerator(props) {
                         <div className='mt-1'>
                             <Row>
                                 <Col>
-                                    <button
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         onClick={(e) => handleOnRepeat(e)}
                                         value="everyday"
                                         style={{
@@ -175,10 +221,12 @@ function PrescriptionGenerator(props) {
                                             height: '42px',
                                             color: '#00109B',
                                             borderRadius: '10px'
-                                        }}>Everyday</button>
+                                        }}>Everyday</motion.button>
                                 </Col>
                                 <Col>
-                                    <button
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         onClick={(e) => handleOnRepeat(e)}
                                         value="alternate days"
                                         style={{
@@ -187,7 +235,7 @@ function PrescriptionGenerator(props) {
                                             borderWidth: '0px',
                                             height: '42px',
                                             borderRadius: '10px',
-                                        }}>Alternate days</button>
+                                        }}>Alternate days</motion.button>
                                 </Col>
                             </Row>
                         </div>
@@ -205,7 +253,9 @@ function PrescriptionGenerator(props) {
                         <div className='mt-1'>
                             <Row>
                                 <Col>
-                                    <button
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         onClick={(e) => handleTimeOfTheDay(e)}
                                         value="morning"
                                         style={{
@@ -216,8 +266,10 @@ function PrescriptionGenerator(props) {
                                             color: '#00109B',
                                             borderRadius: '10px',
                                             marginBottom: '10px'
-                                        }}>Morning</button>
-                                    <button
+                                        }}>Morning</motion.button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         onClick={(e) => handleTimeOfTheDay(e)}
                                         value="evening"
                                         style={{
@@ -227,10 +279,12 @@ function PrescriptionGenerator(props) {
                                             height: '42px',
                                             color: '#00109B',
                                             borderRadius: '10px'
-                                        }}>Evening</button>
+                                        }}>Evening</motion.button>
                                 </Col>
                                 <Col>
-                                    <button
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         onClick={(e) => handleTimeOfTheDay(e)}
                                         value="noon"
                                         style={{
@@ -240,8 +294,10 @@ function PrescriptionGenerator(props) {
                                             height: '42px',
                                             borderRadius: '10px',
                                             marginBottom: '10px'
-                                        }}>Noon</button>
-                                    <button
+                                        }}>Noon</motion.button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         onClick={(e) => handleTimeOfTheDay(e)}
                                         value="night"
                                         style={{
@@ -250,7 +306,7 @@ function PrescriptionGenerator(props) {
                                             borderWidth: '0px',
                                             height: '42px',
                                             borderRadius: '10px',
-                                        }}>Night</button>
+                                        }}>Night</motion.button>
                                 </Col>
                             </Row>
                         </div>
@@ -268,7 +324,9 @@ function PrescriptionGenerator(props) {
                         <div className='mt-1'>
                             <Row>
                                 <Col>
-                                    <button
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         value="after food"
                                         onClick={(e) => handleToBeTaken(e)}
                                         style={{
@@ -278,10 +336,12 @@ function PrescriptionGenerator(props) {
                                             height: '42px',
                                             color: '#00109B',
                                             borderRadius: '10px'
-                                        }}>After Food</button>
+                                        }}>After Food</motion.button>
                                 </Col>
                                 <Col>
-                                    <button
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
                                         value="before food"
                                         onClick={(e) => handleToBeTaken(e)}
                                         style={{
@@ -290,7 +350,7 @@ function PrescriptionGenerator(props) {
                                             borderWidth: '0px',
                                             height: '42px',
                                             borderRadius: '10px',
-                                        }}>Before Food</button>
+                                        }}>Before Food</motion.button>
                                 </Col>
                             </Row>
                         </div>
@@ -299,7 +359,7 @@ function PrescriptionGenerator(props) {
 
                     {/* Dosage Section Start */}
                     <Row className='mt-4'>
-                        <Col className='border' style={{ marginLeft: '1px' }}>
+                        <Col className='' style={{ marginLeft: '1px' }}>
                             <h4>Dosage</h4>
                             <FontAwesomeIcon
                                 onClick={(e) => handleDosageCountDec(e)}
@@ -311,7 +371,7 @@ function PrescriptionGenerator(props) {
                                 icon={faCirclePlus}
                                 style={{ marginLeft: '10px' }} />
                         </Col>
-                        <Col className='border' style={{ marginLeft: '50px', height: 'auto', width: '100px' }}>
+                        <Col className='' style={{ marginLeft: '50px', height: 'auto', width: '100px' }}>
                             <h4>Duration Week</h4>
                             <FontAwesomeIcon
                                 onClick={() => handleDosageDurationDec()}
@@ -327,7 +387,9 @@ function PrescriptionGenerator(props) {
                     {/* Dosage Section End */}
 
                     <Row>
-                        <button
+                        <motion.button
+                            whileHover={{ scale: 1.0 }}
+                            whileTap={{ scale: 0.9 }}
                             onClick={(e) => handleAddMedicine(e)}
                             style={{
                                 width: '600px',
@@ -336,10 +398,10 @@ function PrescriptionGenerator(props) {
                                 borderRadius: '30px',
                                 borderWidth: '0px',
                                 marginTop: '20px'
-                            }}>Add Medicine</button>
+                            }}>Add Medicine</motion.button>
                     </Row>
                 </Col>
-                <Col className='p-3 border'>
+                <Col className='p-3 '>
                     {/* Prescribed Medicine Section Start */}
                     <Row style={{ marginTop: '30px', marginLeft: '50px' }}>
                         <div style={{
@@ -377,7 +439,13 @@ function PrescriptionGenerator(props) {
                     {/* Prescribed Medicine Section End */}
                 </Col>
             </Row >
-            <Button onClick={() => handlePrescriptionInfo()}>Generate Prescription</Button>
+            {/* <Button onClick={() => handlePrescriptionInfo()}>Generate Prescription</Button> */}
+            <CreatePDF
+                patientInfo={location.state.patientInfo}
+                diseaseList={location.state.diseaseList}
+                historyList={location.state.historyList}
+                investigationList={location.state.investigationList}
+                prescribedMedicine={prescribedMedicine} />
         </div >
     )
 }

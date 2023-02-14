@@ -16,7 +16,6 @@ function AddPatientInfo(props) {
 
     const handleOnClick = () => {
         setTimeout(() => {
-            window.location.reload();
             navigate("/home");
         }, 2000);
     }

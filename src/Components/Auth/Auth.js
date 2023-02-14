@@ -177,9 +177,9 @@ class Auth extends Component {
             <div className="login-section">
                 <div className="row">
                     {/* {this.props.errorMsg !== null ? alertMsg : null} */}
-                    <div className="col-md-8 login-image-section">
-                        {/* <img src="Images/Login.jpg" className="img-fluid" alt="Login_Car" /> */}
-                    </div>
+                    {/* <div className="col-md-8 login-image-section"> */}
+                    {/* <img src="Images/Login.jpg" className="img-fluid" alt="Login_Car" /> */}
+                    {/* </div> */}
                     <div className="col-md-4">
                         <Formik
                             initialValues={{
@@ -202,11 +202,11 @@ class Auth extends Component {
                                     if (this.state.authMode === 'signUp') {
                                         this.props.userData(values);
                                         this.setState({ authMode: "signInWithPassword" })
-                                    } 
+                                    }
                                     else {
                                         setTimeout(() => {
                                             window.location.replace('/home');
-                                        }, 100);
+                                        }, 1000);
                                     }
                                 }
                             }
@@ -247,7 +247,17 @@ class Auth extends Component {
                         >
                             {({ values, handleChange, handleSubmit, errors }) => {
                                 return (
-                                    <div className="p-5 auth-form border">
+                                    <div
+                                        style={{
+                                            borderRadius: "25px",
+                                            marginTop: "20%",
+                                            marginLeft: "35vw",
+                                            borderRadius: "10px",
+                                            backgroundColor: "whitesmoke",
+                                            width: "70%",
+                                            boxShadow: "10px 10px 5px grey"
+                                        }}
+                                        className="p-5 border auth-form">
                                         {this.state.authMode === "signInWithPassword" ?
                                             loginForm(values, handleChange, handleSubmit, errors) :
                                             signUpForm(values, handleChange, handleSubmit, errors)}
@@ -256,8 +266,8 @@ class Auth extends Component {
                             }}
                         </Formik>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
         )
     }
 

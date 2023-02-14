@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, Row } from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useNavigate, useLocation } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 function AddDisease() {
     const [searchDisease, setsearchDisease] = useState("");
@@ -28,26 +30,24 @@ function AddDisease() {
         event.preventDefault();
     }
 
+    console.log(diseaseList);
+
     return (
         <div>
             <h1>Enter Patient Disease</h1>
 
             {/* Search Disease Section Start */}
             <form onSubmit={(e) => handleDisease(e)}>
-                <input
-                    type="text"
-                    placeholder='Search Diseases'
-                    autoComplete='on'
-                    onChange={e => setsearchDisease(e.target.value)}
-                    autoFocus
-                    style={{
-                        width: '50vw',
-                        height: '44px',
-                        background: 'rgba(253, 214, 186, 0.6)',
-                        borderRadius: '15px',
-                        borderWidth: '0px',
-                        paddingInline: '250px',
-                    }} />
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={['Hypertension', 'dyslepidemia', 'DM', 'Hypothyroidism', 'LBP-CH(M)', 'Cervico Brachialgia Lt-ch']}
+                    onInputChange={(event, searchDisease) => {
+                        setsearchDisease(searchDisease);
+                    }}
+                    sx={{ width: "900px" }}
+                    renderInput={(params) => <TextField {...params} label="Search Disease" />}
+                />
             </form>
             {/* Search Disease Section End */}
 
@@ -63,20 +63,16 @@ function AddDisease() {
 
             {/* Search Disease Section Start */}
             <form onSubmit={(e) => handleInvestigation(e)}>
-                <input
-                    type="text"
-                    placeholder='Enter Investigation'
-                    autoComplete='on'
-                    onChange={e => setinvestigation(e.target.value)}
-                    autoFocus
-                    style={{
-                        width: '50vw',
-                        height: '44px',
-                        background: 'rgba(253, 214, 186, 0.6)',
-                        borderRadius: '15px',
-                        borderWidth: '0px',
-                        paddingInline: '250px',
-                    }} />
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={['CBC', 'CRP with titre', 'S-Creatinin', 'STSH', 'LBP-CH(M)', 'Cervico Brachialgia Lt-ch']}
+                    onInputChange={(event, searchInvestigation) => {
+                        setinvestigation(searchInvestigation);
+                    }}
+                    sx={{ width: "900px" }}
+                    renderInput={(params) => <TextField {...params} label="Enter Investigation" />}
+                />
             </form>
             {/* Search Disease Section End */}
 
@@ -92,20 +88,16 @@ function AddDisease() {
 
             {/* Search Disease Section Start */}
             <form onSubmit={(e) => handleHistory(e)}>
-                <input
-                    type="text"
-                    placeholder='Enter History'
-                    autoComplete='on'
-                    onChange={e => sethistory(e.target.value)}
-                    autoFocus
-                    style={{
-                        width: '50vw',
-                        height: '44px',
-                        background: 'rgba(253, 214, 186, 0.6)',
-                        borderRadius: '15px',
-                        borderWidth: '0px',
-                        paddingInline: '250px',
-                    }} />
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={['TAH-2007']}
+                    onInputChange={(event, searchHistory) => {
+                        sethistory(searchHistory);
+                    }}
+                    sx={{ width: "900px" }}
+                    renderInput={(params) => <TextField {...params} label="Enter History" />}
+                />
             </form>
             {/* Search Disease Section End */}
 

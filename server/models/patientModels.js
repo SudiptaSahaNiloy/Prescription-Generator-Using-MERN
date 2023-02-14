@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
 
 const patientSchema = mongoose.Schema({
-    regNo: String,
-    name: String,
+    fullName: String,
     email: String,
-    password: String,
     gender: String,
+    age: String,
+    weight: String,
     address: String,
     phoneNo: String,
     bloodGroup: String,
-    knownAllergies: String,
+    knownAllergies: String
 });
 
 const Patient = mongoose.model('patients', patientSchema);

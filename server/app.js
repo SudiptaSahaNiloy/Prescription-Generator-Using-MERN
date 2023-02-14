@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const medicineRouter = require('./routers/medicineRouters');
+const patientRouter = require('./routers/patientRouters');
 const mongoose = require('mongoose');
 const cors = require("cors");
 
@@ -13,6 +14,7 @@ mongoose.connect("mongodb+srv://sudiptasahaniloy:bangladesh305968@prescriptionge
 app.use(cors());
 app.use(express.json());
 app.use('/', medicineRouter); //for the router in locationrouter
+app.use('/Patient', patientRouter);
 
 const port = 8000;
 

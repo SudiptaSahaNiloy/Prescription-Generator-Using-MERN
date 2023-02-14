@@ -70,8 +70,8 @@ function PatientInfo(props) {
         }}>
           <p>Full Name</p>
           <p>Age</p>
-          <p>Gender</p>
           <p>Weight</p>
+          <p>Gender</p>
           <p>Blood Group</p>
           <p>Known Allergies</p>
         </Col>
