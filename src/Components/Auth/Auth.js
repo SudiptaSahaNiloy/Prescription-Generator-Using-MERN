@@ -85,7 +85,7 @@ class Auth extends Component {
                                 <span style={{ color: "red" }}>{errors.confirmPassword}</span>
                             </FormGroup>
                         </Col><br />
-                        <Col md={12}>
+                        {/* <Col md={12}>
                             <FormGroup>
                                 <Input
                                     type="text"
@@ -94,8 +94,8 @@ class Auth extends Component {
                                     values={values.instituition}
                                     placeholder="Current Organization" />
                             </FormGroup>
-                        </Col><br />
-                        <Col md={12}>
+                        </Col><br /> */}
+                        {/* <Col md={12}>
                             <FormGroup>
                                 <Input
                                     type="text"
@@ -104,7 +104,7 @@ class Auth extends Component {
                                     values={values.walletAddress}
                                     placeholder="Wallet Address" />
                             </FormGroup>
-                        </Col><br />
+                        </Col><br /> */}
                     </Row>
                     <div>
                         Already signed up?

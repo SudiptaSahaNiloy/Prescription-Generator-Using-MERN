@@ -1,7 +1,7 @@
 import React from 'react';
 import './stylesheet/patientList.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { motion } from "framer-motion";
 import { useState, useEffect } from 'react';
 // import 'https://fonts.googleapis.com/css2?family=Inter:wght@100&display=swap';
@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import avatar from './avatar.jpg';
 import { getAllPatientInfo } from './../../Redux/mapPatientInfoActionCreator';
 import { connect } from 'react-redux';
+import { DropdownItem } from 'reactstrap';
 
 const mapStateToProps = (state) => {
   return ({
@@ -18,15 +19,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return ({
-    getAllPatientInfo: () => dispatch(getAllPatientInfo())
+    getAllPatientInfo: (sortByType) => dispatch(getAllPatientInfo(sortByType))
   })
 }
 
 function PatientList(props) {
+  const [sortByType, setsortByType] = useState('Name(asc)');
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    props.getAllPatientInfo();
+    props.getAllPatientInfo(sortByType);
   }, [props.allPatientInfo])
 
   return (
@@ -54,8 +57,20 @@ function PatientList(props) {
           }}>Add Patients</motion.button>
       </Link>
       <div className='searchPatients'>
-        <Row>
-          <input className='searchPatientsInput' type="text" autoComplete="on" placeholder="Search Patients" />
+        <Row className='border'>
+          {/* <input className='searchPatientsInput' type="text" autoComplete="on" placeholder="Search Patients" /> */}
+          <Dropdown>
+            <Dropdown.Toggle style={{ width: '400px', padding: '10px' }} variant="success" id="dropdown-basic">
+              Sort By {sortByType}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setsortByType('Name(asc)')}>Name (Ascending)</Dropdown.Item>
+              <Dropdown.Item onClick={() => setsortByType('Name(desc)')}>Name (Descending)</Dropdown.Item>
+              <Dropdown.Item onClick={() => setsortByType('Age(asc)')}>Age (Ascending)</Dropdown.Item>
+              <Dropdown.Item onClick={() => setsortByType('Age(desc)')}>Age (Descending)</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Row>
       </div>
       <Row className='patientList'>
@@ -81,8 +96,12 @@ function PatientList(props) {
                     <p className='patientName'>{item.fullName}</p>
                   </Row>
                   <Row>
-                    <p className='patientDisease'>{item.address}</p>
+                    <div className='patientDisease border'>{item.address}</div>
+                    <div className='patientDisease border'>Age: {item.age}</div>
                   </Row>
+                  {/* <Row>
+                    <p className='patientDisease'>{item.age}</p>
+                  </Row> */}
                 </Col>
               </Row>
             </motion.div>

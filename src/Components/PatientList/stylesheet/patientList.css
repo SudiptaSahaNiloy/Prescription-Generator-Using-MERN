@@ -13,8 +13,8 @@
     /* position: absolute; */
     /* top: 200px; */
     margin-top: 20px;
-    margin-left: 10px;
-    width: 372px;
+    /* margin-left: 10px; */
+    /* width: 472px; */
     height: 42px;
 }
 
@@ -70,14 +70,14 @@
 }
 
 .patientDisease{
-    position: relative;
-    width: auto;
-    height: 21px;
+    /* position: relative; */
+    /* width: auto; */
+    /* height: 21px; */
 
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
     line-height: 18px;
     
-    top: 1px;
+    /* top: 1px; */
 }

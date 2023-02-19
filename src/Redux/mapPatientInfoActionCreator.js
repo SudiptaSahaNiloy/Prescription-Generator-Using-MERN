@@ -11,10 +11,11 @@ export const allPatientInfo = (allPatientInfo) => {
     }
 }
 
-export const getAllPatientInfo = () => dispatch => {
+export const getAllPatientInfo = (sortByType) => dispatch => {
+    console.log(sortByType);
     const URL = mainURL + "/Patient/getPatient";
 
-    axios.get(URL)
+    axios.post(URL, { sortByType: sortByType })
         .then(response => dispatch(allPatientInfo(response.data)))
 }
 

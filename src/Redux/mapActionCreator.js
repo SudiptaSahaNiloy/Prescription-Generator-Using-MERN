@@ -11,9 +11,9 @@ export const searchedMedicineResponse = (medList) => {
     }
 }
 
-export const getSearchMedicineInfo = (genericName) => dispatch => {
+export const getSearchMedicineInfo = (searchedMedicineType, searchMedicine) => dispatch => {
     const URL = mainURL;
-    axios.post(URL, { generic: genericName })
+    axios.post(URL, { searchedMedicineType: searchedMedicineType, searchMedicine: searchMedicine })
         .then(response => dispatch(searchedMedicineResponse(response.data)));
 }
 

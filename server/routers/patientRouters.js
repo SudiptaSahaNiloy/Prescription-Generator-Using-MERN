@@ -26,9 +26,25 @@ const addPatient = async (req, res) => {
 const getPatientInfo = async (req, res) => {
     // console.log(req.body);
     try {
-        const result = await Patient.find();
-        res.set("Access-Control-Allow-Origin", "http://localhost:3000");
-        res.send(result);
+        if (req.body.sortByType === "Name(asc)") {
+            const result = await Patient.find().sort({ fullName: 'asc' });
+            res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+            res.send(result);
+        }
+        else if (req.body.sortByType === "Name(desc)") {
+            const result = await Patient.find().sort({ fullName: 'desc' });
+            res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+            res.send(result);
+        }
+        else if (req.body.sortByType === "Age(asc)") {
+            const result = await Patient.find().sort({ age: 'asc' });
+            res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+            res.send(result);
+        } else {
+            const result = await Patient.find().sort({ age: 'desc' });
+            res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+            res.send(result);
+        }
     } catch (err) {
         return res.status(400).send(err);
     }
@@ -59,7 +75,7 @@ const getPatientInfo = async (req, res) => {
 router.route('/addPatient')
     .post(addPatient)
 router.route('/getPatient')
-    .get(getPatientInfo)
+    .post(getPatientInfo)
 // .post(filterLocationList)
 
 module.exports = router; 

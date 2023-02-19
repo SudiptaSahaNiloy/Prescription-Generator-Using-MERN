@@ -69,6 +69,12 @@ function CreatePDF(props) {
                     </View>
                     {/* Patient Info Section End */}
 
+                    {/* Refererred Doctor Start */}
+                    <View>
+                        <Text style={{ fontSize: '12px', marginLeft: '21px', marginTop: '10px' }}>Referred by: Dr. Jabed Jahangir Tuhin</Text>
+                    </View>
+                    {/* Refererred Doctor End */}
+
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignContent: 'flex-start' }}>
                         <View style={{ display: 'flex', flexDirection: 'col', justifyContent: 'flex-start', alignContent: 'flex-start' }}>
                             {/* Diagnosis Section Start */}
