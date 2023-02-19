@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Button, Table } from 'react-bootstrap';
+import { Row, Col, Table, Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
@@ -12,6 +12,7 @@ import ReactPDF from '@react-pdf/renderer';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { getAllMedicineInfo } from './../../Redux/mapActionCreator';
+import { DropdownItem } from 'reactstrap';
 
 const mapStateToProps = (state) => {
     return ({
@@ -22,13 +23,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return ({
-        getSearchMedicineInfo: (searchedMedicine) => dispatch(getSearchMedicineInfo(searchedMedicine)),
+        getSearchMedicineInfo: (searchedMedicineType, searchMedicine) => dispatch(getSearchMedicineInfo(searchedMedicineType, searchMedicine)),
         getAllMedicineInfo: () => dispatch(getAllMedicineInfo())
     })
 }
 
 function PrescriptionGenerator(props) {
     const [searchMedicine, setsearchMedicine] = useState('');
+    const [searchMedicineType, setsearchMedicineType] = useState('');
     const [selectedMedicine, setselectedMedicine] = useState('');
     const [searchResultTable, setsearchResultTable] = useState(false);
     const [onRepeat, setonRepeat] = useState('');
@@ -38,12 +40,15 @@ function PrescriptionGenerator(props) {
     const [dosageDuration, setdosageDuration] = useState(1);
     const [prescribedMedicine, setprescribedMedicine] = useState([]);
 
+
     const location = useLocation();
     // console.log(location.state);
 
     const handleSubmit = (event) => {
         setsearchResultTable(true);
-        props.getSearchMedicineInfo(searchMedicine);
+        props.getSearchMedicineInfo(searchMedicineType, searchMedicine);
+        console.log(searchMedicine);
+        console.log(searchMedicineType);
         event.preventDefault();
     }
 
@@ -108,6 +113,13 @@ function PrescriptionGenerator(props) {
         setselectedMedicine(med);
     }
 
+    const handleSearchMedicineType = (e) => {
+        setsearchMedicineType(e.target.value);
+        // console.log(e.target.value);
+    }
+
+    // console.log(searchMedicineType);
+
     useEffect(() => {
         // props.getAllMedicineInfo();
     }, []);
@@ -115,18 +127,35 @@ function PrescriptionGenerator(props) {
     // console.log(props.allMedicineResponse);
 
     return (
-        <div>
+        <div onClick={() => setsearchResultTable(false)}>
             <form onSubmit={(e) => handleSubmit(e)}>
-                <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={['Paracetamol', ]}
-                    onInputChange={(event, searchMedicine) => {
-                        setsearchMedicine(searchMedicine);
-                    }}
-                    sx={{ width: "900px" }}
-                    renderInput={(params) => <TextField {...params} label="Search Medicine" />}
-                />
+                <Row>
+                    <Col>
+                        <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            options={['Paracetamol', 'Tramadol Hydrochloride', 'Ciprofloxacin', 'Metronidazole', 'Clonazepam']}
+                            onInputChange={(event, searchMedicine) => {
+                                setsearchMedicine(searchMedicine);
+                            }}
+                            sx={{ width: "800px" }}
+                            renderInput={(params) => <TextField {...params} label="Search Medicine" />}
+                        />
+                    </Col>
+                    <Col>
+                        <Dropdown style={{ height: '55px' }} as={ButtonGroup}>
+                            <Button type='submit' variant="success">Search by {searchMedicineType}</Button>
+
+                            <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
+
+                            <Dropdown.Menu>
+                                <DropdownItem onClick={(e) => handleSearchMedicineType(e)} value="Generic Name">Generic Name</DropdownItem>
+                                <DropdownItem onClick={(e) => handleSearchMedicineType(e)} value="Brand Name">Brand Name</DropdownItem>
+                                {/* <Dropdown.Item onClick={(e) => handleSearchMedicineType(e)} value="Generic Name">Generic Name</Dropdown.Item> */}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Col>
+                </Row>
             </form>
 
             {/* <form onSubmit={(e) => handleSubmit(e)}>
